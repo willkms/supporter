@@ -1,0 +1,301 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supporter-α｜塾生徒成績管理システム</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="../static/scss/style.css">
+    <script src="https://kit.fontawesome.com/5714bd7c86.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      grade_list={{grade_list|tojson}}
+    </script>
+
+
+    <div class="sidebar">
+
+      <div class="sidebar-logo">
+        <img src="../static/img/logo.png" alt="Supporter-α">
+      </div>
+
+      <div class="sidebar-menu">
+        <ul class="sidebar-menu-list">
+          <li>
+            <a href="">
+              <div class="sidebar-menu-image">
+                <img src="../static/img/home.svg" alt="">
+              </div>
+              <div class="sidebar-menu-title">
+                ホーム
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/manage_grade">
+              <div class="sidebar-menu-image">
+                <img src="../static/img/grade.svg" alt="">
+              </div>
+              <div class="sidebar-menu-title">
+                成績管理
+              </div>
+            </a>
+          </li>
+          <li>
+            <div class="sidebar-menu-image">
+              <img src="../static/img/config.svg" alt="">
+            </div>
+            <div class="sidebar-menu-title">
+              設定
+            </div>
+          </li>
+          <ul>
+            <li>
+              <a href="">
+                生徒
+              </a>
+            </li>
+            <li>
+              <a href="/">
+                成績
+              </a>
+            </li>
+            <li>
+              <a href="">
+                テスト
+              </a>
+            </li>
+            <li>
+              <a href="">
+                学校
+              </a>
+            </li>
+            <li>
+              <a href="">
+                安全度
+              </a>
+            </li>
+          </ul>
+        </ul>
+      </div>
+
+    </div>
+    
+    <div class="main">
+
+      <div class="main-head">
+
+        <ul class="breadrumb-list">
+          <li>設定</li>
+          <li>成績</li>
+          <li class="current">生徒一覧画面</li>
+        </ul>
+
+        <p class="page-title">成績設定</p>
+
+      </div>
+
+      <div class="main-contents">
+
+        <div class="main-contents-part">
+          <div class="main-contents-part-title">
+            <p class="part-title">生徒一覧</p>
+          </div>
+
+          <div class="main-contents-part-block">
+            <table id="grade-table">
+                <tr>
+                  <th>生徒番号</th><th>第1回</th><th>第2回</th><th>第3回</th><th>第4回</th><th>第5回</th><th>第6回</th>
+                </tr>
+
+                <!-- <tr>
+                  <td>000001</td>
+                  <td><ul><li>－</li><li>－</li></ul></td>
+                  <td><ul><li>－</li><li>－</li></ul></td>
+                  <td><ul><li>－</li><li>－</li></ul></td>
+                  <td><ul><li>－</li><li>－</li></ul></td>
+                  <td><ul><li>479</li><li>74</li></ul></td>
+                  <td><ul><li>493</li><li>75</li></ul></td>
+                </tr>
+                <tr>
+                    <td>000002</td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>479</li><li>74</li></ul></td>
+                    <td><ul><li>493</li><li>75</li></ul></td>
+                </tr>
+                <tr>
+                    <td>000003</td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>479</li><li>74</li></ul></td>
+                    <td><ul><li>493</li><li>75</li></ul></td>
+                </tr>
+                <tr>
+                    <td>000004</td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>479</li><li>74</li></ul></td>
+                    <td><ul><li>493</li><li>75</li></ul></td>
+                </tr>
+                <tr>
+                    <td>000005</td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>479</li><li>74</li></ul></td>
+                    <td><ul><li>493</li><li>75</li></ul></td>
+                </tr>
+                <tr>
+                    <td>000006</td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>－</li><li>－</li></ul></td>
+                    <td><ul><li>479</li><li>74</li></ul></td>
+                    <td><ul><li>493</li><li>75</li></ul></td>
+                </tr> -->
+              </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="modal">
+        <div class="modal-bk"></div>
+        <div class="modal-main">
+            <div class="modal-title">
+                <p></p>
+            </div>
+            <form action="/" method="post" class="modal-contents">
+                <div class="modal-contents-row">
+                    <div class="modal-contents-col">
+                        <div class="modal-form-row">
+                          <div class="modal-form-image"><img src="../static/img/student.svg" alt="生徒番号"></div>
+                          <div class="modal-form-input"><input type="text" value="生徒番号000001さん" name="student_id" readonly></div>
+                        </div>
+                        <ul class="modal-form-list">
+                          <li>
+                            <ul>
+                              <li>
+                                <div class="modal-form-image"><img src="../static/img/test.svg" alt="テスト名"></div>
+                                <div class="modal-form-input">
+                                  <input type="text" value="第1回実力テスト" disabled>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="modal-form-image"><img src="../static/img/grade.svg" alt="成績"></div>
+                                <div class="modal-form-input"><input type="text" name="score_1" placeholder="5教科合計点数" size="8em"></div>
+                                <div class="modal-form-input"><input type="text" name="s_score_1" placeholder="偏差値" size="3em"></div>
+                              </li>
+                            </ul>
+                          </li>
+                          <li>
+                            <ul>
+                              <li>
+                                <div class="modal-form-image"><img src="../static/img/test.svg" alt="テスト名"></div>
+                                <div class="modal-form-input">
+                                  <input type="text" value="第2回実力テスト" disabled>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="modal-form-image"><img src="../static/img/grade.svg" alt="成績"></div>
+                                <div class="modal-form-input"><input type="text" name="score_2" placeholder="5教科合計点数" size="8em"></div>
+                                <div class="modal-form-input"><input type="text" name="s_score_2" placeholder="偏差値" size="3em"></div>
+                              </li>
+                            </ul>
+                          </li>
+                          <li>
+                            <ul>
+                              <li>
+                                <div class="modal-form-image"><img src="../static/img/test.svg" alt="テスト名"></div>
+                                <div class="modal-form-input">
+                                  <input type="text" value="第3回実力テスト" disabled>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="modal-form-image"><img src="../static/img/grade.svg" alt="成績"></div>
+                                <div class="modal-form-input"><input type="text" name="score_3" placeholder="5教科合計点数" size="8em"></div>
+                                <div class="modal-form-input"><input type="text" name="s_score_3" placeholder="偏差値" size="3em"></div>
+                              </li>
+                            </ul>
+                          </li>
+                          <li>
+                            <ul>
+                              <li>
+                                <div class="modal-form-image"><img src="../static/img/test.svg" alt="テスト名"></div>
+                                <div class="modal-form-input">
+                                  <input type="text" value="第4回実力テスト" disabled>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="modal-form-image"><img src="../static/img/grade.svg" alt="成績"></div>
+                                <div class="modal-form-input"><input type="text" name="score_4" placeholder="5教科合計点数" size="8em"></div>
+                                <div class="modal-form-input"><input type="text" name="s_score_4" placeholder="偏差値" size="3em"></div>
+                              </li>
+                            </ul>
+                          </li>
+                          <li>
+                            <ul>
+                              <li>
+                                <div class="modal-form-image"><img src="../static/img/test.svg" alt="テスト名"></div>
+                                <div class="modal-form-input">
+                                  <input type="text" value="第5回実力テスト" disabled>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="modal-form-image"><img src="../static/img/grade.svg" alt="成績"></div>
+                                <div class="modal-form-input"><input type="text" name="score_5" placeholder="5教科合計点数" size="8em"></div>
+                                <div class="modal-form-input"><input type="text" name="s_score_5" placeholder="偏差値" size="3em"></div>
+                              </li>
+                            </ul>
+                          </li>
+                          <li>
+                            <ul>
+                              <li>
+                                <div class="modal-form-image"><img src="../static/img/test.svg" alt="テスト名"></div>
+                                <div class="modal-form-input">
+                                  <input type="text" value="第6回実力テスト" disabled>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="modal-form-image"><img src="../static/img/grade.svg" alt="成績"></div>
+                                <div class="modal-form-input"><input type="text" name="score_6"placeholder="5教科合計点数" size="8em"></div>
+                                <div class="modal-form-input"><input type="text" name="s_score_6" placeholder="偏差値" size="3em"></div>
+                              </li>
+                            </ul>
+                          </li>
+                          
+                        </ul>
+                        <!-- <div class="modal-form-row">
+                          <button type="button" class="modal-form-list-add-button"><i class="fa-solid fa-plus"></i><p>テスト追加</p></button>
+                        </div> -->
+                    </div>
+                    <div class="modal-contents-col">
+                        <div class="modal-form-submit">
+                          <button type="button" class="modal-form-cancel-button">戻る</button>
+                          <button type="submit" class="modal-form-exe-button">登録</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
+    <script src="../static/js/basic.js" charset="utf-8"></script>
+    <script src="../static/js/config.js" charset="utf-8"></script>
+  </body>
+</html>
