@@ -66,7 +66,8 @@ jQuery(function($){
                 scales: {
                     yAxes: [{
                         ticks: {
-                            min: Math.floor(score_min / 50) * 50,
+                            // min: Math.floor(score_min / 50) * 50,
+                            min: 0,
                             max: 500
                         }
                     }]
