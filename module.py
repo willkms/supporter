@@ -348,7 +348,7 @@ def add_predict_grade(grade_list):
         temp_student_grade_list = []
         student_grade_df = pd.DataFrame(grade_list[i], columns=["grade_id", "score", "s_score", "student_id", "test_id"])
         student_grade_df = student_grade_df.astype({"student_id": "int64", "test_id": "int64"})        
-        test_id = student_grade_df.loc[student_grade_df["score"] == "-1"]["test_id"].max()
+        test_id = student_grade_df.loc[student_grade_df["score"] != "-1"]["test_id"].max() + 1
         predict_df = student_grade_df
         predict_df = predict_df.drop(columns=predict_df.columns[[0,1,2]]).reset_index(drop=True)
         predict_df = predict_df.astype({"test_id": "int64"})

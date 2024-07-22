@@ -20,7 +20,7 @@ def config_grade():
     if request.method == "GET":
 
         grade_list, msg, is_result = make_grade_list()
-        grade_list = add_predict_grade(grade_list)
+        # grade_list = add_predict_grade(grade_list)
 
         return render_template("config_grade.html", grade_list=grade_list)
     
@@ -59,7 +59,7 @@ def config_grade():
         print(is_result)
 
         grade_list, msg, is_result = make_grade_list()
-        grade_list = add_predict_grade(grade_list)
+        # grade_list = add_predict_grade(grade_list)
 
         return render_template("config_grade.html", grade_list=grade_list)
     
@@ -68,7 +68,7 @@ def config_grade():
 def manage_grade():
 
     grade_list, msg, is_result = make_grade_list()
-    grade_list = add_predict_grade(grade_list)
+    # grade_list = add_predict_grade(grade_list)
 
     return render_template("manage_grade.html", grade_list=grade_list)
 
