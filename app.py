@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from module import edit_grade, make_grade_list, conditional_search_csv, search_csv, make_student, add_predict_grade
+from module import edit_grade, make_grade_list, conditional_search_csv, search_csv, make_student, add_predict_grade, delete_student
 
 app = Flask(__name__)
 
@@ -121,8 +121,20 @@ def config_student():
     
     else:
 
-        make_student()
-        student_list, msg, is_result = search_csv("student.csv")
+        # print("mode:", request.form.get('mode'))
+        # print("id:", request.form.get('id'))
+
+        mode = int(request.form.get('mode'))
+
+        # mode:0 新規登録、mode:2 削除
+        if mode == 0:
+            make_student()
+            student_list, msg, is_result = search_csv("student.csv")
+
+        elif mode == 2:
+            student_id = int(request.form.get('id'))
+            delete_student(student_id)
+            student_list, msg, is_result = search_csv("student.csv")
 
         return render_template("config_student.html", student_list=student_list)
 

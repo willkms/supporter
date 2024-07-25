@@ -231,11 +231,33 @@ def make_student():
     msg = ""
 
     student_id_list = search_csv("student.csv")[0]
-    student_new_id = len(student_id_list) + 1
+    # print(student_id_list)
+    student_id_list = list(itertools.chain.from_iterable(student_id_list))
+    student_id_list = [int(s) for s in student_id_list]
+    # print(student_id_list)
+
+    # student_new_id = len(student_id_list) + 1
+    
+    if len(student_id_list) == 0:
+        student_new_id = 1
+    else:
+        student_new_id = max(student_id_list) + 1
+
     print(student_new_id)
 
     grade_list = search_csv("grade.csv")[0]
-    grade_new_id = len(grade_list) + 1
+    grade_id_list = []
+
+    if len(grade_list) == 0:
+        grade_new_id = 1
+    else:
+        for i in range(len(grade_list)):
+            grade_id_list.append(int(grade_list[i][0]))
+            # print(grade_id_list)
+            
+            # grade_new_id = len(grade_list) + 1
+            grade_new_id = max(grade_id_list) + 1
+
     print(grade_new_id)
 
     # data = [[student_new_id]]
@@ -349,9 +371,12 @@ def add_predict_grade(grade_list):
         student_grade_df = pd.DataFrame(grade_list[i], columns=["grade_id", "score", "s_score", "student_id", "test_id"])
         student_grade_df = student_grade_df.astype({"student_id": "int64", "test_id": "int64"})        
         test_id = student_grade_df.loc[student_grade_df["score"] != "-1"]["test_id"].max() + 1
-        predict_df = student_grade_df
-        predict_df = predict_df.drop(columns=predict_df.columns[[0,1,2]]).reset_index(drop=True)
-        predict_df = predict_df.astype({"test_id": "int64"})
+
+        print("student_grade_df:", student_grade_df)
+
+        # predict_df = student_grade_df
+        # predict_df = predict_df.drop(columns=predict_df.columns[[0,1,2]]).reset_index(drop=True)
+        # predict_df = predict_df.astype({"test_id": "int64"})
 
         # print(student_grade_df.index.dtype)
 
@@ -368,8 +393,13 @@ def add_predict_grade(grade_list):
             else:
 
                 test_id = int(test_id)
+                print("test_id=", test_id)
 
                 for j in range(test_id, 7):
+
+                    print("j=", j)
+
+                    # 変数定義
 
                     test_index = j - 2
                     student_id = int(grade_list[i][test_index][3])
@@ -386,8 +416,71 @@ def add_predict_grade(grade_list):
                     score_model = pickle.load(open(score_model_path, 'rb'))
                     s_score_model = pickle.load(open(s_score_model_path, 'rb'))
 
-                    predict_score = score_model.predict(predict_df.loc[predict_df["test_id"] == j])
-                    predict_s_score = s_score_model.predict(predict_df.loc[predict_df["test_id"] == j])
+                    # predict_dfの整形
+                    # 予測したい1つ前までのテスト結果のDataFrameにする
+                    predict_df = student_grade_df
+                    predict_df = predict_df.loc[(predict_df["test_id"] >= 1) & (predict_df["test_id"] <= (j - 1))]
+                    predict_df = predict_df.sort_values(['student_id', 'test_id'])
+                    print("predict_df", predict_df)
+
+                    # 空を含む場合、平均値で点数、偏差値を補完
+                    # 空を含む生徒IDのグループを抽出
+                    predict_df = predict_df.astype("int64")
+                    score_group_df = predict_df.groupby(['student_id'])
+                    empty_df = score_group_df.filter(lambda group: group["score"].min() == -1)
+
+                    # 欠損値を補完するためのデータフレームを作成
+                    not_empty_df = empty_df[empty_df["score"] != -1].groupby(['student_id'])
+                    stu_se = not_empty_df["score"].mean().reset_index()["student_id"]
+                    score_se = not_empty_df["score"].mean().reset_index()["score"]
+                    s_score_se = not_empty_df["s_score"].mean().reset_index()["s_score"]
+
+                    not_empty_df = pd.concat([stu_se, score_se, s_score_se], axis=1)
+
+                    # 欠損値を補完
+                    for k in range(len(not_empty_df)):
+
+                        student_id = not_empty_df.iat[k, 0]
+
+                        predict_df.loc[(predict_df["score"] == -1) & (predict_df["student_id"] == student_id), "score"] = not_empty_df.iat[k, 1]
+                        predict_df.loc[(predict_df["s_score"] == -1) & (predict_df["student_id"] == student_id), "s_score"] = not_empty_df.iat[k, 2]
+
+                    # 生徒IDの昇順でn回目のテストの成績、偏差値を並べたSeriesを作成し、DataFrameにする
+                    temp_df = predict_df["student_id"].drop_duplicates().reset_index(drop=True)
+                    # print("temp_df:", temp_df)
+
+                    for k in range(1, j):
+                        n_test_df = predict_df.loc[(predict_df["test_id"] == k)]
+                        score_n = n_test_df["score"].reset_index(drop=True)
+                        s_score_n = n_test_df["s_score"].reset_index(drop=True)
+
+                        
+                        temp_df = pd.concat([temp_df, score_n, s_score_n], axis=1) 
+                        temp_df = temp_df.rename(columns={'score': 'score_' + str(k), 's_score': 's_score_' + str(k)})
+
+                    print("predict_df:", predict_df)
+                    print("temp_df:", temp_df)
+
+                    # if test_id == 2:
+                    #     predict_df = temp_df.drop(columns=temp_df.columns[[0]]).reset_index(drop=True)
+                    # else:
+                    #     predict_df = temp_df.drop(columns=temp_df.columns[[0,-1,-2]]).reset_index(drop=True)
+
+                    predict_df = temp_df.drop(columns=temp_df.columns[[0]]).reset_index(drop=True)
+
+                    print("predict_df:", predict_df)
+                    
+                    predict_df_score = predict_df.iloc[0:, ::2]
+                    predict_df_s_score = predict_df.iloc[0:, 1::2]
+
+                    print("predict_df_score:", predict_df_score)
+                    print("predict_df_s_score:", predict_df_s_score)
+
+                    predict_df_score = predict_df_score.astype("int64")
+                    predict_df_s_score = predict_df_s_score.astype("int64")
+
+                    predict_score = score_model.predict(predict_df_score)
+                    predict_s_score = s_score_model.predict(predict_df_s_score)
                     predict_score = predict_score.round()
                     predict_s_score = predict_s_score.round()
 
@@ -408,7 +501,140 @@ def add_predict_grade(grade_list):
     return predict_grade_list
 
         
+def delete_student(student_id):
 
+    csv_path_student = THIS_FOLDER / "csv/student.csv"
+    csv_path_grade = THIS_FOLDER / "csv/grade.csv"
+    is_result = 0
+    msg = ""
+
+    temp_list = []
+
+    # student_id_list = search_csv("student.csv")[0]
+    # student_new_id = len(student_id_list) + 1
+    # print(student_new_id)
+
+    # grade_list = search_csv("grade.csv")[0]
+    # grade_new_id = len(grade_list) + 1
+    # print(grade_new_id)
+
+    # # data = [[student_new_id]]
+
+    # 生徒テーブルから該当生徒を削除
+
+    try:
+
+        with open(csv_path_student, encoding="utf-8", mode="r") as f:
+            student_reader = csv.reader(f)
+            student_data = list(student_reader)
+            print(student_data)
+
+            for row in student_data:
+
+                if row[0] == str(student_id):
+
+                    pass
+
+                else:
+
+                    temp_list.append(row)
+
+    except FileNotFoundError as e:
+        msg = "CSVファイルが見つかりません。"
+        is_result = 0
+
+    except UnicodeDecodeError as e:
+        msg = "文字コードエラー"
+        is_result = 0
+
+    except Exception as e:
+        msg = "予期しないエラーが発生しました。"
+        is_result = 0
+        print(e.__class__.__name__) 
+        print(e.args)
+        print(e) 
+        print(f"{e.__class__.__name__}: {e}")        
+
+    try:
+
+        with open(csv_path_student, mode='w', encoding='utf-8', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerows(temp_list)
+            temp_list = []
+    
+    except FileNotFoundError as e:
+        msg = "CSVファイルが見つかりません。"
+        is_result = 0
+
+    except UnicodeDecodeError as e:
+        msg = "文字コードエラー"
+        is_result = 0
+
+    except Exception as e:
+        msg = "予期しないエラーが発生しました。"
+        is_result = 0
+        print(e.__class__.__name__) 
+        print(e.args)
+        print(e) 
+        print(f"{e.__class__.__name__}: {e}") 
+
+
+    # 成績テーブルから該当生徒を削除
+
+    try:
+
+        with open(csv_path_grade, encoding="utf-8", mode="r") as f:
+            grade_reader = csv.reader(f)
+            grade_data = list(grade_reader)
+            print(grade_data)
+
+            for row in grade_data:
+
+                if row[3] == str(student_id):
+
+                    pass
+
+                else:
+
+                    temp_list.append(row)
+
+    except FileNotFoundError as e:
+        msg = "CSVファイルが見つかりません。"
+        is_result = 0
+
+    except UnicodeDecodeError as e:
+        msg = "文字コードエラー"
+        is_result = 0
+
+    except Exception as e:
+        msg = "予期しないエラーが発生しました。"
+        is_result = 0
+        print(e.__class__.__name__) 
+        print(e.args)
+        print(e) 
+        print(f"{e.__class__.__name__}: {e}")        
+
+    try:
+
+        with open(csv_path_grade, mode='w', encoding='utf-8', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerows(temp_list)
+    
+    except FileNotFoundError as e:
+        msg = "CSVファイルが見つかりません。"
+        is_result = 0
+
+    except UnicodeDecodeError as e:
+        msg = "文字コードエラー"
+        is_result = 0
+
+    except Exception as e:
+        msg = "予期しないエラーが発生しました。"
+        is_result = 0
+        print(e.__class__.__name__) 
+        print(e.args)
+        print(e) 
+        print(f"{e.__class__.__name__}: {e}") 
             
 
 
@@ -445,15 +671,15 @@ def add_predict_grade(grade_list):
 # grade_list, msg, is_result = make_grade_list()
 # print(grade_list)
 
-#生徒新規登録
+# #生徒新規登録
 # make_student()
 
-# # 成績データ予測値補完
-# # 実測値の型：str、予測値の型：float
-# grade_list, msg, is_result = make_grade_list()
-# # print(grade_list)
-# predict_grade_list = add_predict_grade(grade_list)
-# # print(predict_grade_list)
+# 成績データ予測値補完
+# 実測値の型：str、予測値の型：float
+grade_list, msg, is_result = make_grade_list()
+# print(grade_list)
+predict_grade_list = add_predict_grade(grade_list)
+# print(predict_grade_list)
 
 # # print(predict_grade_list[0][5][1])
 # # print(type(predict_grade_list[0][5][1]))
@@ -463,3 +689,6 @@ def add_predict_grade(grade_list):
 # # print(type(predict_grade_list[1][5][1]))
 # # print(predict_grade_list[1][5][2])
 # # print(type(predict_grade_list[1][5][2]))
+
+# # 生徒削除
+# delete_student(6)

@@ -83,8 +83,8 @@ jQuery(function($){
 
                 $("#student-table").append('<tr></tr');
                 $("#student-table tr").eq(-1).append("<td>" + ('000000' + student_list[i][0]).slice(-6) + "</td>",
-                                                     "<td><button type='button' class='edit-button'><img src='../static/img/edit.svg' alt='編集'></button></td>",
-                                                     "<td><button class='delete-button' type='button'><img src='../static/img/delete.svg' alt='削除'></button></td>");
+                                                     "<td><button type='button' class='edit-button' id='student-edit-button'><img src='../static/img/edit.svg' alt='編集'></button></td>",
+                                                     "<td><button class='delete-button' type='button' id='student-delete-button'><img src='../static/img/delete.svg' alt='削除'></button></td>");
             }
 
         }
@@ -149,6 +149,26 @@ jQuery(function($){
     $(document).on('click', '#student-add-button', function (e) {
 
         form = $('<form></form>',{action:'/config_student',method:'POST'}).hide();
+
+        form.append($('<input></input>',{type: 'hidden', name: 'mode', value: 0}));
+
+        body = $('body');
+        body.append(form);
+
+        form.submit();
+        return false;
+
+    });
+
+    $(document).on('click', '#student-delete-button', function (e) {
+
+        var student_id = $(this).closest('tr').find('td').eq(0).text();
+
+        form = $('<form></form>',{action:'/config_student',method:'POST'}).hide();
+
+        form.append($('<input></input>',{type: 'hidden', name: 'mode', value: 2}));
+        form.append($('<input></input>',{type: 'hidden', name: 'id', value: student_id}));
+
         body = $('body');
         body.append(form);
 
