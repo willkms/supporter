@@ -369,14 +369,14 @@ def add_predict_grade(grade_list):
 
         temp_student_grade_list = []
         student_grade_df = pd.DataFrame(grade_list[i], columns=["grade_id", "score", "s_score", "student_id", "test_id"])
-        student_grade_df = student_grade_df.astype({"student_id": "int64", "test_id": "int64"})        
+        student_grade_df = student_grade_df.astype({"student_id": "int32", "test_id": "int32"})        
         test_id = student_grade_df.loc[student_grade_df["score"] != "-1"]["test_id"].max() + 1
 
         print("student_grade_df:", student_grade_df)
 
         # predict_df = student_grade_df
         # predict_df = predict_df.drop(columns=predict_df.columns[[0,1,2]]).reset_index(drop=True)
-        # predict_df = predict_df.astype({"test_id": "int64"})
+        # predict_df = predict_df.astype({"test_id": "int32"})
 
         # print(student_grade_df.index.dtype)
 
@@ -425,7 +425,7 @@ def add_predict_grade(grade_list):
 
                     # 空を含む場合、平均値で点数、偏差値を補完
                     # 空を含む生徒IDのグループを抽出
-                    predict_df = predict_df.astype("int64")
+                    predict_df = predict_df.astype("int32")
                     score_group_df = predict_df.groupby(['student_id'])
                     empty_df = score_group_df.filter(lambda group: group["score"].min() == -1)
 
@@ -476,8 +476,8 @@ def add_predict_grade(grade_list):
                     print("predict_df_score:", predict_df_score)
                     print("predict_df_s_score:", predict_df_s_score)
 
-                    predict_df_score = predict_df_score.astype("int64")
-                    predict_df_s_score = predict_df_s_score.astype("int64")
+                    predict_df_score = predict_df_score.astype("int32")
+                    predict_df_s_score = predict_df_s_score.astype("int32")
 
                     predict_score = score_model.predict(predict_df_score)
                     predict_s_score = s_score_model.predict(predict_df_s_score)
