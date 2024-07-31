@@ -449,6 +449,8 @@ def add_predict_grade(grade_list):
                     temp_df = predict_df["student_id"].drop_duplicates().reset_index(drop=True)
                     # print("temp_df:", temp_df)
 
+                    del not_empty_df, empty_df, stu_se, score_se, s_score_se
+
                     for k in range(1, j):
                         n_test_df = predict_df.loc[(predict_df["test_id"] == k)]
                         score_n = n_test_df["score"].reset_index(drop=True)
@@ -469,6 +471,8 @@ def add_predict_grade(grade_list):
                     predict_df = temp_df.drop(columns=temp_df.columns[[0]]).reset_index(drop=True)
 
                     print("predict_df:", predict_df)
+
+                    del temp_df
                     
                     predict_df_score = predict_df.iloc[0:, ::2]
                     predict_df_s_score = predict_df.iloc[0:, 1::2]
