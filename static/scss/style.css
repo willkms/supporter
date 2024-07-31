@@ -1,21 +1,3 @@
-@font-face {
-  font-family: "Noto Sans JP";
-  font-style: normal;
-  font-weight: 400;
-  src: url("../font/Noto_Sans_JP/static/NotoSansJP-Regular.ttf") format("truetype");
-}
-@font-face {
-  font-family: "Noto Sans JP";
-  font-style: normal;
-  font-weight: 500;
-  src: url("../font/Noto_Sans_JP/static/NotoSansJP-SemiBold.ttf") format("truetype");
-}
-@font-face {
-  font-family: "Noto Sans JP";
-  font-style: normal;
-  font-weight: 700;
-  src: url("../font/Noto_Sans_JP/static/NotoSansJP-Bold.ttf") format("truetype");
-}
 body {
   background-color: #EEEFF0;
   font-family: "Noto Sans JP", sans-serif;
