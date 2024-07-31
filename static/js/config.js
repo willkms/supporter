@@ -7,7 +7,12 @@ jQuery(function($){
         pathname = location.pathname;
         console.log(pathname);
 
+        $(".sidebar-menu-list").find("li").eq(2).addClass("clicked");
+        $(".sidebar-menu-list ul").slideToggle();
+
         if(pathname == "/config_grade" || pathname == "/"){
+
+            $(".sidebar-menu-list").find("ul").find("li").eq(1).addClass("current");
     
             console.log(grade_list);
 
@@ -77,14 +82,19 @@ jQuery(function($){
 
             // console.log(student_list);
 
+            $(".sidebar-menu-list").find("ul").find("li").eq(0).addClass("current");
+
             for(var i of Object.keys(student_list)){
 
                 // console.log(i);
 
                 $("#student-table").append('<tr></tr');
+                // $("#student-table tr").eq(-1).append("<td>" + ('000000' + student_list[i][0]).slice(-6) + "</td>",
+                //                                      "<td><button type='button' class='edit-button' id='student-edit-button'><img src='../static/img/edit.svg' alt='編集'></button></td>",
+                //                                      "<td><button class='delete-button' type='button' id='student-delete-button'><img src='../static/img/delete.svg' alt='削除'></button></td>");
                 $("#student-table tr").eq(-1).append("<td>" + ('000000' + student_list[i][0]).slice(-6) + "</td>",
-                                                     "<td><button type='button' class='edit-button' id='student-edit-button'><img src='../static/img/edit.svg' alt='編集'></button></td>",
-                                                     "<td><button class='delete-button' type='button' id='student-delete-button'><img src='../static/img/delete.svg' alt='削除'></button></td>");
+                                                     "<td><button type='button' class='edit-button' id='student-edit-button'><div></div></button></td>",
+                                                     "<td><button class='delete-button' type='button' id='student-delete-button'><div></div></button></td>");
             }
 
         }

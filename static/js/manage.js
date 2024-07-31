@@ -7,6 +7,8 @@ jQuery(function($){
         pathname = location.pathname;
         console.log(pathname);
 
+        $(".sidebar-menu-list").find("li").eq(1).addClass("current");
+
         if(pathname == "/grade"){
 
             console.log(student_id);
@@ -57,18 +59,34 @@ jQuery(function($){
 
             var ctx = document.getElementById('grade-chart');
 
-            const aryMax = function (a, b) {return Math.max(a, b);}
-            const aryMin = function (a, b) {return Math.min(a, b);}
-            let score_max = actual_score_list.reduce(aryMax);
-            let score_min = actual_score_list.reduce(aryMin);
+            const aryMax = function (a, b) {
+                if(a != null && b != null){
+                    return Math.max(Number(a), Number(b));
+                }
+                
+            }
+            const aryMin = function (a, b) {return Math.min(Number(a), Number(b));}
+
+            const max_min_list = score_list.filter(v => v);
+            // console.log(score_list);
+            // console.log(max_min_list);
+
+            let score_max = max_min_list.reduce(aryMax);
+            let score_min = max_min_list.reduce(aryMin);
+
+            console.log("最小値：", score_min);
+            console.log("最大値：", score_max)
 
             var line_options = {
                 scales: {
                     yAxes: [{
                         ticks: {
-                            // min: Math.floor(score_min / 50) * 50,
-                            min: 0,
-                            max: 500
+                            stepSize: 25,
+                            min: Math.floor(score_min / 50) * 50,
+                            // min: 0,
+                            max: Math.floor(score_max / 50 + 1) * 50,
+                            suggestMin: 0,
+                            suggestMax: 500
                         }
                     }]
                 }
@@ -82,7 +100,8 @@ jQuery(function($){
                         {
                             label: "5教科合計点数",
                             data: actual_score_list,
-                            borderColor: 'rgba(255, 100, 100, 1)',
+                            // borderColor: 'rgba(255, 100, 100, 1)',
+                            borderColor: '#1C6DD0',
                             lineTension: 0,
                             fill: false,
                             borderWidth: 3
@@ -90,7 +109,8 @@ jQuery(function($){
                         {
                             label: "予測合計点数",
                             data: score_list,
-                            borderColor: 'rgba(255, 100, 100, 1)',
+                            // borderColor: 'rgba(255, 100, 100, 1)',
+                            borderColor: '#1C6DD0',
                             lineTension: 0,
                             fill: false,
                             borderWidth: 3,

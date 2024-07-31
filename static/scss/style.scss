@@ -2,8 +2,33 @@
 // 初期設定
 //////////////////////////////////////////////////
 
+@charset "UTF-8";
+
+@font-face {
+  font-family: "Noto Sans JP";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../font/Noto_Sans_JP/static/NotoSansJP-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Noto Sans JP";
+  font-style: normal;
+  font-weight: 500;
+  src: url("../font/Noto_Sans_JP/static/NotoSansJP-SemiBold.ttf") format("truetype");
+}
+
+
+@font-face {
+  font-family: "Noto Sans JP";
+  font-style: normal;
+  font-weight: 700;
+  src: url("../font/Noto_Sans_JP/static/NotoSansJP-Bold.ttf") format("truetype");
+}
+
 body{
-  font-family: sans-serif;
+  background-color: #EEEFF0;
+  font-family: "Noto Sans JP", sans-serif;
 }
 
 ul{
@@ -29,6 +54,13 @@ a{
   display: block;
 }
 
+.no-spin input::-webkit-inner-spin-button,
+.no-spin input::-webkit-outer-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+    -moz-appearance:textfield !important;
+}
+
 //////////////////////////////////////////////////
 // 共通設定
 //////////////////////////////////////////////////
@@ -40,6 +72,7 @@ body{
 .sidebar{
   width: 240px;
   padding: 20px;
+  background-color: #fff;
 
   .sidebar-logo{
     margin: 0 0 32px;
@@ -57,7 +90,20 @@ body{
         display: flex;
         align-items: center;
         gap: 8px;
-        padding: 12px 0;
+        padding: 12px 8px;
+        border-radius: 4px;
+
+        &:first-of-type{
+          .sidebar-menu-image{
+            mask-image: url("../img/home.svg");
+          }
+        }
+
+        &:nth-of-type(2){
+          .sidebar-menu-image{
+            mask-image: url("../img/grade.svg");
+          }
+        }
 
         &:nth-of-type(3){
           position: relative;
@@ -66,10 +112,12 @@ body{
             position: absolute;
             top: 50%;
             right: 0;
-            color: #1F1F30;
+            // color: #1F1F30;
+            color: #ABB2C4;
             font-family: "Font Awesome 6 Free";
             font-size: 22px;
             font-weight: 700;
+            transition: .3s;
             transform: translateY(-50%);
             content: "\f107";
           }
@@ -79,40 +127,113 @@ body{
               content: "\f106";
             }
           }
+
+          .sidebar-menu-image{
+            mask-image: url("../img/config.svg");
+          }
           
         }
 
         a{
           display: flex;
+          width: 100%;
           align-items: center;
           gap: 8px;
+          text-decoration: none;
+          transition: .3s;
+        }
+
+        &.current{
+          background-color: #EEEFF0;
+          a{
+            color: #1F1F30;
+          }
+
+          .sidebar-menu-image{
+            background-color: #1F1F30;
+          }
+
+          .sidebar-menu-title{
+            color: #1F1F30;
+            transition: .3s;
+          }
+        }
+
+        &:hover{
+          a{
+            color: #1F1F30;
+          }
+
+          .sidebar-menu-image{
+            background-color: #1F1F30;
+          }
+
+          .sidebar-menu-title{
+            color: #1F1F30;
+            transition: .3s;
+          }
+
+          &:nth-of-type(3){
+            &::after{
+              color: #1F1F30;
+            }
+          }
         }
 
         .sidebar-menu-image{
           width: 32px;
+          height: 32px;
+          mask-size: contain;
+          mask-repeat: no-repeat;
+          mask-position: center;
+          background-color: #ABB2C4;
+          transition: .3s;
 
-          img{
-            width: 100%;
-            object-fit: contain;
-            object-position: center;
-          }
+          // img{
+          //   width: 100%;
+          //   object-fit: contain;
+          //   object-position: center;
+          // }
         }
 
-        .sidebar-menu-text{
-          color: #1F1F30;
+        .sidebar-menu-title{
+          color: #ABB2C4;
+          transition: .3s;
         }
       }
 
       > ul{
         display: none;
-        margin: 0 0 0 40px;
+        padding: 0 0 0 32px;
 
         // &.clicked{
         //   display: block;
         // }
 
         li{
-          padding: 8px 0;
+          padding: 8px 16px;
+          border-radius: 4px;
+
+          a{
+            display: block;
+            transition: .3s;
+            color: #ABB2C4;
+            text-decoration: none;
+          }
+
+          &:hover{
+            a{
+              color: #1F1F30;
+            }
+          }
+
+          &.current{
+            background-color: #EEEFF0;
+            a{   
+              color: #1F1F30;
+            }
+          }
+
         }
       }
     }
@@ -163,6 +284,8 @@ body{
     padding: 16px 24px;
 
     .main-contents-part{
+      max-height: calc(100vh - 96px - 16px* 4);
+      overflow-y: scroll;
       padding: 16px;
       border-radius: 4px;
       background-color: #fff;
@@ -170,7 +293,7 @@ body{
       .main-contents-part-title{
         display: flex;
         align-items: center;
-        gap: 18px;
+        gap: 32px;
         margin: 0 0 32px;
 
         p{
@@ -178,18 +301,19 @@ body{
         }
 
         button{
-          width: 40px;
+          // width: 40px;
           height: 40px;
-          padding: 7px 10px;
+          padding: 7px 15px 7px 10px;
           border: 0;
           border-radius: 4px;
-          color: #1F1F30;
-          font-size: 20px;
-          font-weight: bold;
-          background-color: #C3C3C3;
+          color: #fff;
+          font-size: 16px;
+          font-weight: 500;
+          background-color: #1C6DD0;
+          transition: .3s;
 
           &:hover{
-            border: 1px solid #1F1F30;
+            opacity: 0.8;
           }
         }
       }
@@ -199,7 +323,8 @@ body{
         gap: 16px;
 
         .main-contents-part-column{
-          width: calc((100% - 16px) / 2);
+
+          // width: calc((100% - 16px) / 2);
 
           table{
             tr{
@@ -220,6 +345,18 @@ body{
             }
           }
         }
+
+        .width-6{
+          width: calc((100% - 16px) / 2);
+        }
+
+        .width-8{
+          width: calc((100% - 16px) / 3 * 2);
+        }
+
+        .width-4{
+          width: calc((100% - 16px) / 3);
+        }
       }
 
       .main-contents-part-block{
@@ -233,12 +370,15 @@ body{
               cursor: default;
 
               &:hover{
-                border: 1px solid #C3C3C3;
+                // border: 1px solid #C3C3C3;
+                background-color: #EEEFF0;
+                color: #1F1F30;
               }
             }
             
             &:hover{
-              border: 1px solid #1F1F30;
+              background-color: #EAF3FE;
+              color: #1C6DD0;
             }
           }
 
@@ -267,15 +407,44 @@ body{
           padding: 8px;
           border: 0;
           border-radius: 4px;
-          background-color: #C3C3C3;
+          background-color: rgb(238, 239, 240);
           text-align: center;
+          transition: .3s;
 
-          img{
+          &:hover{
+            background-color: #1C6DD0;
+
+            > div{
+              background-color: #fff;
+            }
+          }
+
+          > div{
             width: 20px;
             height: 20px;
-            object-fit: contain;
-            object-position: center;
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+            background-color: rgb(103,109,124);
+            transition: .3s;
           }
+
+
+
+          // img{
+          //   width: 20px;
+          //   height: 20px;
+          //   object-fit: contain;
+          //   object-position: center;
+          // }
+        }
+
+        .edit-button > div{
+          mask-image: url("../img/edit.svg");
+        }
+
+        .delete-button > div{
+          mask-image: url("../img/delete.svg");
         }
       }
     }
@@ -303,7 +472,7 @@ body{
 
   .modal-main{
     position: relative;
-    width: 1042px;
+    width: 993px;
     height: 536px;
     top: 50%;
     left: 50%;
@@ -352,6 +521,14 @@ body{
             input{
               padding: 8px 16px;
             }
+
+            .input-score{
+              width: 8.8em;
+            }
+
+            .input-s-score{
+              width: 5.2em;
+            }
           }
 
           .modal-form-list{
@@ -393,11 +570,24 @@ body{
 
             .modal-form-cancel-button{
               border: 1px solid #1F1F30;
+              transition: .3s;
+
+              &:hover{
+                opacity: 0.8;
+                cursor: pointer;
+              }
             }
 
             .modal-form-exe-button{
               border: 0;
-              background-color: #C3C3C3;
+              background-color: #1C6DD0;
+              color: #fff;
+              transition: .3s;
+
+              &:hover{
+                opacity: 0.8;
+                cursor: pointer;
+              }
             }
           }
         }

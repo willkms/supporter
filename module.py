@@ -489,8 +489,10 @@ def add_predict_grade(grade_list):
                     # print(predict_score)
                     # print(predict_s_score)
 
-                    student_grade_df.loc[(student_grade_df["student_id"] == student_id) & (student_grade_df["test_id"] == test_id), "score"] = predict_score
-                    student_grade_df.loc[(student_grade_df["student_id"] == student_id) & (student_grade_df["test_id"] == test_id), "s_score"] = predict_s_score
+                    # student_grade_df.loc[(student_grade_df["student_id"] == student_id) & (student_grade_df["test_id"] == test_id), "score"] = predict_score
+                    # student_grade_df.loc[(student_grade_df["student_id"] == student_id) & (student_grade_df["test_id"] == test_id), "s_score"] = predict_s_score
+                    student_grade_df.loc[(student_grade_df["student_id"] == student_id) & (student_grade_df["test_id"] == j), "score"] = predict_score
+                    student_grade_df.loc[(student_grade_df["student_id"] == student_id) & (student_grade_df["test_id"] == j), "s_score"] = predict_s_score
 
         # print(student_grade_df)
         temp_student_grade_list = student_grade_df.to_numpy().tolist()
